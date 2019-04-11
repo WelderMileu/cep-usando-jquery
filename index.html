@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html leng="pt-br">
+	<head>
+		<meta charset="utf-8">
+		<title>Cep</title>
+		<link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+		<script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+		<script type="text/javascript" src="node_modules/jquery.maskedinput/src/jquery.maskedinput.js"></script>
+		<style type="text/css">
+			label{
+				color:grey;
+				margin-top: 5px
+			}
+			span{
+				margin-left: 5px;
+				color:red;
+				font-size:12px;
+			}
+			.onload{
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container mt-3">
+			<div class="float-right">
+				<p class="onload btn btn-outline-dark btn-sm" onclick="oload()"> Refrech &sube;</p>
+			</div>
+			<div class="col-sm-5">
+				<p><strong>CEP DOS CORREIOS : </strong>01001000</p>
+				<input type="text" class="form-control" id="cep" placeholder="CEP">
+			</div>
+			<div class="col-sm-7 mt-3">
+				<label>Logradouro</label>
+				<input type="" name="" disabled="disabled" id="logradouro" class="form-control mt-2">
+				<label>Complemento</label><span id="complemento1"></span>
+				<input type="" name="" disabled="disabled" id="complemento" class="form-control mt-2">
+				<label>Bairro</label>
+				<input type="" name="" disabled="disabled" id="bairro" class="form-control mt-2">
+				<label>Localidade</label>
+				<input type="" name="" disabled="disabled" id="localidade" class="form-control mt-2">
+				<label>UF</label>
+				<input type="" name="" disabled="disabled" id="uf" class="form-control mt-2">
+			</div>
+		</div>
+
+		<script type="text/javascript">
+			function oload(){
+				window.location.reload();
+			}
+
+			jQuery(function($){
+				$("#cep").mask("99999-999");
+			});
+
+			
+			$(document).ready(function(){
+				let comp = $("#cep").focusout(function(){
+					let cep  = $("#cep").val();
+					let cep2 = cep.replace("-","");
+					let url  = "https://viacep.com.br/ws/"+cep2+"/json/";
+
+					$.ajax({
+						url:url,
+						type:'get',
+						dataType:'json',
+						success:function(data){
+							console.log(data);
+							$("#logradouro").val(data.logradouro);
+							$("#complemento").val(data.complemento);
+							$("#bairro").val(data.bairro);
+							$("#localidade").val(data.localidade);
+							$("#uf").val(data.uf);
+							
+							if ($("#complemento").val() == '') {
+								$("#complemento1").html('Campo não encontrado');
+							}else{
+								$("#complemento1").html('');
+							}
+						}
+					});
+				});
+			});
+		</script>
+	</body>
+</html>
